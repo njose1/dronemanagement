@@ -67,7 +67,7 @@ public class DroneServiceImpl implements DroneService {
 	/*
 	 * Updates drone's position in DB/memory
 	 * 
-	 * @param DronDto with name and position
+	 * @param DroneDto with name and position
 	 * 
 	 * @return List<DroneDto> which shows the full route of drone during the update
 	 */
@@ -113,7 +113,7 @@ public class DroneServiceImpl implements DroneService {
 	 * Updates the position if current X == New X and saves the new position in
 	 * DB/memory
 	 * 
-	 * @param List that holds the drone's route, new drone position, current drone
+	 * @param List that holds the drone's route from current drone position to new
 	 * position
 	 * 
 	 * @return List of drone's routes
@@ -139,7 +139,7 @@ public class DroneServiceImpl implements DroneService {
 	 * Updates the position if current Y != New Y saves the new position in
 	 * DB/memory
 	 * 
-	 * @param List that holds the drone's route, new drone position, current drone
+	 * @param List that holds the drone's route from current drone position to new
 	 * position
 	 * 
 	 * @return List of drone's routes
@@ -162,11 +162,11 @@ public class DroneServiceImpl implements DroneService {
 			droneDto.setDirection(Direction.NORTH);
 			drone.setDirection(Direction.NORTH.toString());
 		}
-		droneDtos.add(new DroneDto(drone.getName(),
-				new DronePosition(droneDto.getPosition().getX(), droneDto.getPosition().getY()), drone.getDirection()));
 		drone.setPosition_x(droneDto.getPosition().getX());
 		drone.setPosition_y(droneDto.getPosition().getY());
 		droneRepo.save(drone);
+		droneDtos.add(new DroneDto(drone.getName(), new DronePosition(drone.getPosition_x(), drone.getPosition_y()),
+				drone.getDirection()));
 		return droneDtos;
 
 	}
@@ -175,7 +175,7 @@ public class DroneServiceImpl implements DroneService {
 	 * Updates the position if current Y == New Y and saves the new position in
 	 * DB/memory
 	 * 
-	 * @param List that holds the drone's route, new drone position, current drone
+	 * @param List that holds the drone's route from current drone position to new
 	 * position
 	 * 
 	 * @return List of drone's routes
@@ -205,11 +205,11 @@ public class DroneServiceImpl implements DroneService {
 			return updatePositionForDifferentXForSameY(droneDtos, droneDto, drone);
 
 		}
-		droneDtos.add(new DroneDto(drone.getName(),
-				new DronePosition(droneDto.getPosition().getX(), droneDto.getPosition().getY()), drone.getDirection()));
 		drone.setPosition_x(droneDto.getPosition().getX());
 		drone.setPosition_y(droneDto.getPosition().getY());
 		droneRepo.save(drone);
+		droneDtos.add(new DroneDto(drone.getName(), new DronePosition(drone.getPosition_x(), drone.getPosition_y()),
+				drone.getDirection()));
 		return droneDtos;
 
 	}
@@ -218,7 +218,7 @@ public class DroneServiceImpl implements DroneService {
 	 * Updates the position if current Y = New Y and current X != New X and saves
 	 * the new position in DB/memory
 	 * 
-	 * @param List that holds the drone's route, new drone position, current drone
+	 * @param List that holds the drone's route from current drone position to new
 	 * position
 	 * 
 	 * @return List of drone's routes
@@ -241,12 +241,11 @@ public class DroneServiceImpl implements DroneService {
 			droneDto.setDirection(Direction.WEST);
 			drone.setDirection(Direction.WEST.toString());
 		}
-		droneDtos.add(new DroneDto(drone.getName(),
-				new DronePosition(droneDto.getPosition().getX(), droneDto.getPosition().getY()), drone.getDirection()));
-
 		drone.setPosition_x(droneDto.getPosition().getX());
 		drone.setPosition_y(droneDto.getPosition().getY());
 		droneRepo.save(drone);
+		droneDtos.add(new DroneDto(drone.getName(), new DronePosition(drone.getPosition_x(), drone.getPosition_y()),
+				drone.getDirection()));
 		return droneDtos;
 
 	}

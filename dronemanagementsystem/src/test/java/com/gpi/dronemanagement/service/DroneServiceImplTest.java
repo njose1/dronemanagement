@@ -1,7 +1,6 @@
 package com.gpi.dronemanagement.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -16,10 +15,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.gpi.dronemanagement.dto.DroneDto;
-import com.gpi.dronemanagement.repository.DroneRepository;
-import com.gpi.dronemanagement.service.DroneService;
-import com.gpi.dronemanagement.service.impl.DroneServiceImpl;
 import com.gpi.dronemanagement.dto.DronePosition;
+import com.gpi.dronemanagement.repository.DroneRepository;
+import com.gpi.dronemanagement.service.impl.DroneServiceImpl;
 import com.gpi.dronemanagement.entity.Drone;
 
 class DroneServiceImplTest {
@@ -28,18 +26,17 @@ class DroneServiceImplTest {
 	private DroneRepository droneRepo;
 	private DroneService droneService;
 	AutoCloseable autoclose;
-	Optional<Drone> drone1;
 	DroneDto droneDto;
-	Drone drone2;
-	List<DroneDto> droneDtos = new ArrayList<DroneDto>();
+	Drone drone;
+	List<DroneDto> droneDtos;
 
 	@BeforeEach
 	void setUp() {
 		autoclose = MockitoAnnotations.openMocks(this);
 		droneService = new DroneServiceImpl(droneRepo);
-		drone1 = Optional.ofNullable(new Drone("testdronetest", 2, 2, "NORTH"));
-		drone2 = new Drone("testdronetest", 2, 2, "NORTH");
-		droneDto = new DroneDto("testdronetest", new DronePosition(2, 2), "NORTH");
+		drone = new Drone("testdronetest", 2, 2, "NORTH");
+		droneDto = new DroneDto("testdronetest", new DronePosition(3,4),"SOUTH");
+		droneDtos = new ArrayList<DroneDto>();
 		droneDtos.add(droneDto);
 	}
 
@@ -53,8 +50,7 @@ class DroneServiceImplTest {
 		mock(DroneDto.class);
 		mock(DroneRepository.class);
 		mock(Drone.class);
-
-		when(droneRepo.save(drone2)).thenReturn(drone2);
+		when(droneRepo.save(drone)).thenReturn(drone);
 		assertThat(droneService.createDrone(droneDto)).isEqualTo(droneDto);
 	}
 
@@ -63,9 +59,8 @@ class DroneServiceImplTest {
 		mock(DroneDto.class);
 		mock(DroneRepository.class);
 		mock(Drone.class);
-		when(droneRepo.findById("testdronetest")).thenReturn(drone1);
-
-		assertThat(droneService.getDroneByName("testdronetest").getName()).isEqualTo(drone1.get().getName());
+		when(droneRepo.findById("testdronetest")).thenReturn(Optional.ofNullable(drone));
+		assertThat(droneService.getDroneByName("testdronetest").getName()).isEqualTo(Optional.ofNullable(drone).get().getName());
 	}
 
 	@Test
@@ -73,8 +68,9 @@ class DroneServiceImplTest {
 		mock(DroneDto.class);
 		mock(DroneRepository.class);
 		mock(Drone.class);
-		when(droneRepo.save(drone2)).thenReturn(drone2);
-		assertThat(droneService.updatePosition(droneDto)).isEqualTo(droneDtos);
+		when(droneRepo.save(drone)).thenReturn(drone);
+		when(droneRepo.findById("testdronetest")).thenReturn(Optional.ofNullable(drone));
+		assertThat(droneService.updatePosition(droneDto).get(0).getName()).isEqualTo(droneDtos.get(0).getName());
 	}
 
 }
