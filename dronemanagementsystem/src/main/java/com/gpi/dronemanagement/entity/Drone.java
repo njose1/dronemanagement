@@ -14,6 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "drones")
 public class Drone {
